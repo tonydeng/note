@@ -240,3 +240,64 @@ nodeppt：https://github.com/ksky521/nodePPT
 ## 当进入此页，就执行incallback函数
 ## 当离开此页面，就执行outcallback函数
 ```
+
+
+### 表格实例
+
+```
+### 市面上主要的css预处理器：less\sass\stylus
+---
+ |less| sass | stylus
+:-------|:------:|-------:|--------
+环境 |js/nodejs | Ruby | nodejs
+扩展名 | .less | .sass/.scss | .styl
+特点 | 老牌，用户多，支持js解析 | 功能全，有成型框架，发展快 | 语法多样，小众
+案例/框架 | [Bootstrap](http://getbootstrap.com/) | [compass](http://compass-style.org) [bourbon](http://bourbon.io) |
+```
+
+### 插入iframe
+
+使用data-src作为iframe的url，这样只有切换到当前页才会加载url内容~
+
+```
+<iframe data-src="http://www.baidu.com" src="about:blank;"></iframe>
+```
+
+### 示例
+
+类似下面的语法：(更多用法查看ppts/demo.md文件)
+```
+title: nodeppt markdown 演示
+speaker: Theo Wang
+url: https://github.com/ksky521/nodePPT
+transition: zoomin
+
+[slide]
+
+# 封面样式
+## h1是作为封面用的，内部的都用h2
+
+[slide style="background-image:url('/img/bg1.png')"]
+
+# 背景图片 {:&.flexbox.vleft}
+## 使用方法：&#91;slide style="background-image:url('/img/bg1.png')"&#93;
+
+[slide]
+
+## 主页面样式
+### ----是上下分界线
+----
+
+nodeppt是基于nodejs写的支持 **Markdown!** 语法的网页PPT
+
+nodeppt：https://github.com/ksky521/nodePPT
+
+[slide]
+
+什么？这些功能还不够用？
+
+极客模式：查看源码的nodeppt.js，相信你会找到牛逼的手机互动（摇一摇换页）功能
+```
+
+查看项目目录ppts获取更多帮助信息
+更多demo，查看 ppts 目录的demo
