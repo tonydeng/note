@@ -226,7 +226,7 @@ nodeppt：https://github.com/ksky521/nodePPT
 ## 图片，点击全屏
 ----
 
-![小萝莉](/girl.jpg "小萝莉")
+![小萝莉](/img/demo/girl.jpg "小萝莉")
 
 
 [slide]
