@@ -4,7 +4,7 @@ url: https://gitlab.duoquyuedu.com/dengtao/note/master/ppts/md/high-performance_
 transition: cover-diamond
 files: /js/demo.js,/css/demo.css
 
-[slide data-transition="vertical3d"]
+[slide data-transition="vertical3d" style="background-image:url('/img/high-performance-server/cover.jpg')"]
 
 # 高性能服务端三要素
 <small>Tony Deng</small>
@@ -52,13 +52,13 @@ https://friendfeed/tonydeng
 [slide data-transition="earthquake"]
 ## 上面的讨论，可能我们期待的是这样场面
 ----
-![美女打架](/img/mm.jpg "美女打架")
+![美女打架](/img/high-performance-server/mm.jpg "美女打架")
 
 [slide data-transition="cards"]
 
 ## 然而实际可能产生的结果可能是......
 ----
-![程序猿打架](/img/gorilla-fight.jpg "程序猿打架")
+![程序猿打架](/img/high-performance-server/gorilla-fight.jpg "程序猿打架")
 
 别忘了，美女对于程序猿这个职业来说，基本上是非常非常稀奇的资源 
 
@@ -79,6 +79,8 @@ https://friendfeed/tonydeng
 [slide data-transition="kontext"]
 
 ## Cache
+
+[slide data-transition="kontext"]
 
 Cache翻译成中文就是**“缓存”**，台湾的叫法是**“快取”**
 
@@ -189,7 +191,7 @@ Cache其实最早应用在计算机的CPU中，有兴趣的同学可以自行Goo
 
 [slide data-transition="newspaper"]
 
-什么是**异步**？
+## 什么是**异步**？
 
 就是不在第一时间告知调用者结果，告诉他我已经收到这个任务了，我会处理，处理完了通知你结果。
 
@@ -219,10 +221,131 @@ AJAX使用回调的方式来支持异步，大致流程是：A交代给B一个�
 [slide data-transition="move"]
 
 ## AJAX流程图
-![Ajax流程图](/img/ajax.gif)
+![Ajax流程图](/img/high-performance-server/ajax.gif)
 
 [slide data-transition="move"]
 
 ## 异步的方式
 
 在服务端的程序中，除了使用[线程](http://zh.wikipedia.org/zh-cn/%E7%BA%BF%E7%A8%8B)、[协程](http://zh.wikipedia.org/zh-cn/%E7%BA%BF%E7%A8%8B)、[回调](http://zh.wikipedia.org/zh-cn/%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0)以外，另外一种常见的异步的支持方式就是[消息队列](http://zh.wikipedia.org/zh-cn/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97)。
+
+[slide data-transition="move"]
+
+## 消息队列原理
+
+生产者发送消息到消息队列中，消费者监听这个队列，当发现有消息之后，从队列取出消息，并作出相应处理，并把结果存储起来或者通过某种方式告知生产者。
+
+[slide data-transition="move"]
+
+## 注意
+
+异步再很多时候，可以运用现代化计算机CPU的多核特性和分布式计算特性，能显著的提升应用的性能，但是一定要注意一个**前提**就是：
+
+> 异步任务的结果必须是主进程进行下一步操作所不依赖的，否则主进程必须等待，直到这个任务执行结束，拿到结果再进行下一步，这时就变成传统的同步计算了。
+
+[slide data-transition="circle"]
+
+##  Concurrent
+
+[slide data-transition="circle"]
+
+## Concurrent的意思就是并行。
+
+如果将一个任务拆分成多个更小的任务，同时来进行，这样是不是更快些呢？
+
+[slide data-transition="circle"]
+
+现代的CPU往往具有多个核心，而且有些CPU也具有超线程能力，我们完全可以将一个任务拆成多个小得任务，交给CPU的多个核心，或者分布式计算系统的多个计算节点，就可以充分利用并行计算来提升性能。
+
+[slide data-transition="circle"]
+
+## 前提
+
+你要拆分的各个小任务之间**不要有相互依赖**的关系。
+
+[slide data-transition="circle"]
+
+## 依然是栗子
+
+有一批用户，我们需要计算他们的活跃度。
+
+* 传统的方式： {:&.moveIn} 
+    * 查出这一批用户，然后写一个循环，然后轮流计算他们的积分，最后得到的结果 
+* 并行的方式： 
+    * 其实每个用户的计算都是独立的，相互不依赖，那么我们就可以利用这一点来进行并行计算   
+
+[slide data-transition="circle"]
+    
+## 上代码    
+
+[slide data-transition="circle"]
+
+## 某段使用了并行计算的代码
+
+```java
+public List<Commit> getCommits(String objectId, String path, int offset, int maxCount) {
+        List<String> shas = getCommitsSha(this, objectId, path, offset, maxCount);
+        List<Commit> commits = new ArrayList<>();
+
+        if (shas != null) {
+            List<GetCommit> getCommits = new ArrayList<>();
+            for (String sha : shas) {
+                getCommits.add(new GetCommit(this, sha));
+            }
+
+            //声明一个自适应的线程池
+            ExecutorService executor = Executors.newFixedThreadPool(8);
+
+            List<Future<Commit>> futureList = null;
+
+            //并发的调用getCommit
+            futureList = executor.invokeAll(getCommits);
+            executor.shutdown();
+
+            for (Future<Commit> future : futureList) {
+                Commit commit = future.get();
+                commits.add(commit);
+            }        
+        }
+        return commits;
+    }
+```
+
+[slide data-transition="circle"]
+
+## 关键代码
+
+利用Java的Cocurrent包来做并发循环，充分利用多核来尽快得到执行结果
+
+```java
+//声明一个自适应的线程池
+ExecutorService executor = Executors.newFixedThreadPool(8);
+
+List<Future<Commit>> futureList = null;
+
+//并发的调用getCommit
+futureList = executor.invokeAll(getCommits);
+executor.shutdown();
+
+```
+
+[slide data-transition="cards"]
+
+## 总结
+
+[slide data-transition="cards"]
+
+关于高性能服务端程序需要注意的点还有很多，这里只是简单介绍了Cahce（缓存）、Asynchronous（异步）、Concurrent（并行）三个利器。即便我介绍的也只是这三个利器的冰山一角，但是请相信，如果你理解了这三个东西，从和你关系思考服务端变成，会获得不少的收获。
+
+[slide data-transition="cards"]
+
+这三者也是相辅相成的关系，很多时候都是配合着使用才能起到很好的效果。异步和并行在某种程度上是有重叠的，而我们经常使用异步的方式去主动构建缓存。
+
+[slide data-transition="kontext"]
+
+## 最后的小提示
+
+* 不要让CPU闲着（CPU正常情况下压力大的时候自然不会闲着，这里指CPU负载低的时候，可以让它主动构建缓存，或者做一些准备工作等等）。
+* 提升CPU效率，即不要总让CPU做重复的劳动，用空间换时间的理念来减轻CPU的压力。
+* 不要让无关紧要的任务卡住主进程，让他们在后台慢慢做。
+* 可以提前做好准备工作，这个比较抽象，但是举个栗子就明白了：连接池、主动缓存以及之前的代码栗子都是很好地栗子
