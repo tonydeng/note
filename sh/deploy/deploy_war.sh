@@ -33,6 +33,10 @@ WAR=${URL##*/}
 PROJECT=${WAR%-*}
 
 WAR_DIR=$abspath/war
+TMP_DIR=$abspath/tmp
+
+rm -rf $WAR_DIR
+rm -rf $TMP_DIR
 
 if [ ! -z $URL ] &&  [ "`echo $URL|awk -F '/' '{print $3}'`" == 'mvn.dq.in' ]; then
     echo $WAR
@@ -45,9 +49,29 @@ else
     Usage
 fi
 
+if [[ ! -f $WAR_DIR/$WAR ]]; then
+    echo "$WAR_DIR/$WAR is not exist"
+    Usage
+fi
 
-mkdir -p $WAR_DIR
-cd $WAR_DIR
+# mkdir -p $WAR_DIR
+# cd $WAR_DIR
+echo
+echo "-------------------download war------------------------"
+echo
+wget -c -P $WAR_DIR $URL
 
-wget $URL -o $WAR
+
+
+mkdir -p $TMP_DIR/$PROJECT
+
+cd $TMP_DIR/$PROJECT
+
+jar xvf $WAR_DIR/$WAR
+
+cp -rf WEB-INF/backup/deploy/* WEB-INF/config/
+
+cd ../
+
+tar jcvf $PROJECT.tar.bz2 $PROJECT
 

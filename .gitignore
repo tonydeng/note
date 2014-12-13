@@ -25,3 +25,5 @@ Session.vim
 *.sublime-workspace
 
 #Project
+sh/deploy/war
+sh/deploy/tmp
