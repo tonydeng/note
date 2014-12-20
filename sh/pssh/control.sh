@@ -94,18 +94,21 @@ echo "..."
 #     echo $host" execution $SHELL_FILE..."
 # done
 
-SHELLS_DIR='/tmp/shells'
+read  -p "input your shells proxy server account: " USER
+
+USER_HOME="/home/$USER"
+SHELLS_DIR="$USER_HOME/shells"
 #get real path
 cd `echo ${0%/*}`
 abspath=`pwd`
 LOGS_DIR=$abspath/logs
 # pssh -h $LIST_FILE -l root -P "mkdir -p $SHELLS_DIR"
-echo "pssh -h $LIST_FILE -l root -o $LOGS_DIR -P \"mkdir -p $SHELLS_DIR\""
-pssh -h $LIST_FILE -l root -o $LOGS_DIR -P "mkdir -p $SHELLS_DIR"
-echo "pscp -h $LIST_FILE -l root -o $LOGS_DIR $SHELL_FILE  $SHELLS_DIR/$SHELL_FILE"
-pscp -h $LIST_FILE -l root -o $LOGS_DIR $SHELL_FILE  $SHELLS_DIR/$SHELL_FILE
+echo "pssh -h $LIST_FILE -l $USER -o $LOGS_DIR -P \"mkdir -p $SHELLS_DIR\""
+pssh -h $LIST_FILE -l $USER -o $LOGS_DIR -P "mkdir -p $SHELLS_DIR"
+echo "pscp -h $LIST_FILE -l $USER -o $LOGS_DIR $SHELL_FILE  $SHELLS_DIR/$SHELL_FILE"
+pscp -h $LIST_FILE -l $USER -o $LOGS_DIR $SHELL_FILE  $SHELLS_DIR/$SHELL_FILE
 
-pssh -h $LIST_FILE -l root -o $LOGS_DIR -P "sh $SHELLS_DIR/$SHELL_FILE"
+# pssh -h $LIST_FILE -l $USER -o $LOGS_DIR -P "sh $SHELLS_DIR/$SHELL_FILE"
 # for CMD in `cat $SHELL_FILE`
 # do
 #     echo $CMD
