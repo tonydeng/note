@@ -1,0 +1,45 @@
+#!/bin/sh
+
+Usage(){
+    echo "welcome use run st production server update script
+    -----------------------------------------
+    use it require input your update project
+           gook luck!
+    author:
+        dengtao@duoquyuedu.com
+    -----------------------------------------
+    Usage:
+
+    # 执行指定脚本
+    ./st.sh project
+    "
+    exit 1
+}
+
+# 参数数量判断
+if [[ $# -ne 1 ]]; then
+    Usage
+fi
+
+PROJECT=$1
+
+#get real path
+if [[ -z ${0%/*} ]]; then
+    cd `echo ${0%/*}`
+fi
+abspath=`pwd`
+
+USER=`whoami`
+
+mkdir -p ~/tmp
+
+cd ~/tmp
+
+tar xvfj ~/release/$PROJECT.tar.bz2
+
+while read HOST; do
+    RSYNC="rsync -avu ~/tmp/* $USER@$HOST:/dq/resource/st/"
+    echo $RSYNC
+    eval $RSYNC
+done < $abspath/hosts.conf
+rm -rf ~/tmp
