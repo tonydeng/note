@@ -32,7 +32,7 @@ https://friendfeed/tonydeng
 
 [slide data-transition="stick"]
 
-![image](/img/muse/Terpsichore_2014A2_397.jpg)
+![大妈也疯狂](/img/muse/Terpsichore_2014A2_397.jpg)
 
 [slide data-transition="vertical3d"]
 
@@ -78,7 +78,7 @@ https://friendfeed/tonydeng
 
 ## 视频解决方案需求
 
-![image](/img/muse/视频解决方案需求.png)
+![视频解决方案需求](/img/muse/video_resolvent.png)
 
 [slide data-transition="newspaper"]
 
@@ -103,6 +103,7 @@ https://friendfeed/tonydeng
 获得视频下载链接
 
 > http://php.cntaijiquan.com/downcq.php?u=29084
+
 
 [slide data-transition="newspaper"]
 
@@ -140,6 +141,7 @@ Expires: Thu, 31 Dec 2037 23:55:55 GMT
 Cache-Control: max-age=315360000
 Accept-Ranges: bytes
 ```
+
 [slide data-transition="newspaper"]
 
 ### 草莓广场舞
