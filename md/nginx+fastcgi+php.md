@@ -20,7 +20,7 @@ cd php-5.6.4
     /--enable-inline-optimization --with-bz2 --with-zlib --enable-sockets 
     /--enable-sysvsem --enable-sysvshm --enable-pcntl --enable-mbregex --with-mhash 
     --enable-zip --with-pcre-regex --with-mysql --with-mysqli --with-gd 
-    /--with-jpeg-dir --with-config-file-path=/etc
+    /--with-jpeg-dir --with-config-file-path=/etc --with-pdo-mysql
 
 make 
 
