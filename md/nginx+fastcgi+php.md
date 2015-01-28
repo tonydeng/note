@@ -1,5 +1,52 @@
 # Nginx + FastCGI + PHP 安装文档
 
+## 安装mcrypt支持
+
+
+从[sourceforge](http://sourceforge.net/)下载[mcrypt-2.6.8](http://sourceforge.net/projects/mcrypt/files/MCrypt/2.6.8/)、[libmcrypt-2.5.8](http://sourceforge.net/projects/mcrypt/files/Libmcrypt/2.5.8/)和[mhash-0.9.9.9](http://sourceforge.net/projects/mhash/files/mhash/0.9.9.9/)。
+
+* 安装libmcrypt
+
+```
+tar xvfj libmcrypt-2.5.8.tar.bz2 
+
+cd libmcrypt-2.5.8
+
+./configure
+
+make 
+
+make install
+```
+
+* 安装mhash
+
+```
+tar xvfj mhash-0.9.9.9.tar.bz2
+
+cd mhash-0.9.9.9
+
+./configure
+
+make 
+
+make install
+```
+
+* 安装mcrypt
+
+```
+tar zxvf mcrypt-2.5.8.tar.gz
+
+cd mcrypt-2.5.8
+
+LD_LIBRARY_PATH=/usr/local/lib ./configure
+
+make
+
+make install
+```
+
 ## 安装php
 
 ### 下载PHP
@@ -15,16 +62,24 @@ tar jxvf php-5.6.4.tar.bz2
 
 cd php-5.6.4 
 
-./configure --prefix=/usr/local/php-5.6.4 --enable-fpm 
-    /--enable-mbstring --enable-pdo --disable-debug --disable-rpath     
-    /--enable-inline-optimization --with-bz2 --with-zlib --enable-sockets 
-    /--enable-sysvsem --enable-sysvshm --enable-pcntl --enable-mbregex --with-mhash 
-    --enable-zip --with-pcre-regex --with-mysql --with-mysqli --with-gd 
-    /--with-jpeg-dir --with-config-file-path=/etc --with-pdo-mysql
+./configure --prefix=/usr/local/php-5.6.4 --enable-fpm --enable-mbstring --enable-pdo --disable-debug --disable-rpath --enable-inline-optimization --with-bz2 --with-zlib --enable-sockets --enable-sysvsem --enable-sysvshm --enable-pcntl --enable-mbregex --with-mhash --enable-zip --with-pcre-regex --with-mysql --with-mysqli --with-gd --with-jpeg-dir --with-config-file-path=/etc --with-pdo-mysql --with-pdo-mysql --with-freetype-dir=/usr/include/freetype2/freetype/ --with-mcrypt --enable-opcache
 
 make 
 
 make install
+```
+
+#### 编译php时出现的错误
+##### 1. 错误信息 --enable-opcache=no
+```
+checking "whether flock struct is BSD ordered"... "no"
+configure: error: Don't know how to define struct flock on this system, set --enable-opcache=no
+```
+
+```
+echo '/usr/local/lib'  >> /etc/ld.so.conf
+
+ldconfig
 ```
 
 ### 设置php环境变量
