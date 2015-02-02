@@ -1,5 +1,4 @@
 #!/bin/sh
-
 # 脚本使用说明
 Usage(){
     echo "welcome use war deploy script
@@ -14,8 +13,16 @@ Usage(){
     # 下载war并替换生产环境的配置
     ./deploy.sh url
     "
+}
+
+Die( ){
+    echo
+    echo "$*"
+    Usage
+    echo
     exit 1
 }
+
 
 # 定义脚本需要的变量
 # get real path
@@ -26,46 +33,64 @@ URL=$1
 WAR=${URL##*/}
 PROJECT=${WAR%-*}
 
-WAR_DIR=$abspath/war
-TMP_DIR=$abspath/tmp
-
-rm -rf $WAR_DIR
-rm -rf $TMP_DIR
-
-if [ ! -z $URL ] &&  [ "`echo $URL|awk -F '/' '{print $3}'`" == 'mvn.dq.in' ]; then
-    echo $WAR
-    echo "'${WAR##*.}'"
-    if [ ! -z $WAR ] && [ "`echo ${WAR##*.}`" != 'war' ]; then
-        echo "URL is not standardized , No war"
-        Usage
+UrlCheck(){
+    if [ ! -z $URL ] &&  [ "`echo $URL|awk -F '/' '{print $3}'`" == 'mvn.dq.in' ]; then
+        echo $WAR
+        echo "'${WAR##*.}'"
+        if [ ! -z $WAR ] && [ "`echo ${WAR##*.}`" != 'war' ]; then
+            Die "URL is not standardized , No war"
+        fi
+    else
+        Die "URL is no standardized"
     fi
-else
-    Usage
-fi
-
-if [[ ! -f $WAR_DIR/$WAR ]]; then
-    echo "$WAR_DIR/$WAR is not exist"
-    Usage
-fi
-
-# mkdir -p $WAR_DIR
-# cd $WAR_DIR
-echo
-echo "-------------------download war------------------------"
-echo
-wget -c -P $WAR_DIR $URL
+}
 
 
+Build(){
+    WAR_DIR=$abspath/war
+    TMP_DIR=$abspath/tmp
 
-mkdir -p $TMP_DIR/$PROJECT
+    rm -rf $WAR_DIR
+    rm -rf $TMP_DIR
+    # download war
+    echo
+    echo "-------------------download war------------------------"
+    echo
+    wget -c -P $WAR_DIR $URL
 
-cd $TMP_DIR/$PROJECT
+    if [[ ! -f $WAR_DIR/$WAR ]]; then
+        Die "$WAR_DIR/$WAR is not exist"
+    fi
 
-jar xvf $WAR_DIR/$WAR
+    # package
+    mkdir -p $TMP_DIR/$PROJECT
 
-cp -rf WEB-INF/backup/deploy/* WEB-INF/config/
+    cd $TMP_DIR/$PROJECT
 
-cd ../
+    jar xvf $WAR_DIR/$WAR
 
-tar jcvf $PROJECT.tar.bz2 $PROJECT
+    cp -rf WEB-INF/backup/deploy/* WEB-INF/config/
+
+    cd ../
+
+    tar jcvf $PROJECT.tar.bz2 $PROJECT
+
+    #Sync
+    SyncCmd="scp $TMP_DIR/$PROJECT.tar.bz2 release@123.56.85.106:~/release/war/"
+    echo $SyncCmd
+    eval $SyncCmd
+
+    #Clean
+
+    rm -rf $WAR_DIR
+    rm -rf $TMP_DIR
+}
+
+
+Main(){
+    UrlCheck
+    Build
+}
+
+Main
 
