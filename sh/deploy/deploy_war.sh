@@ -11,14 +11,8 @@ Usage(){
     -----------------------------------------
     Usage:
 
-    # 发布到测试环境
-    ./deploy.sh test
-
-    # 发布到生产环境
-    ./deploy.sh production
-
-    # 发布版本到Git
-    ./deploy.sh release
+    # 下载war并替换生产环境的配置
+    ./deploy.sh url
     "
     exit 1
 }
