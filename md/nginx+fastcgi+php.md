@@ -62,7 +62,7 @@ tar jxvf php-5.6.4.tar.bz2
 
 cd php-5.6.4 
 
-./configure --prefix=/usr/local/php-5.6.4 --enable-fpm --enable-mbstring --enable-pdo --disable-debug --disable-rpath --enable-inline-optimization --with-bz2 --with-zlib --enable-sockets --enable-sysvsem --enable-sysvshm --enable-pcntl --enable-mbregex --with-mhash --enable-zip --with-pcre-regex --with-mysql --with-mysqli --with-gd --with-jpeg-dir --with-config-file-path=/etc --with-pdo-mysql --with-pdo-mysql --with-freetype-dir=/usr/include/freetype2/freetype/ --with-mcrypt --enable-opcache
+./configure --prefix=/usr/local/php-5.6.4 --enable-fpm --enable-mbstring --enable-pdo --disable-debug --disable-rpath --enable-inline-optimization --with-bz2 --with-zlib --enable-sockets --enable-sysvsem --enable-sysvshm --enable-pcntl --enable-mbregex --with-mhash --enable-zip --with-pcre-regex --with-mysql --with-mysqli --with-gd --with-jpeg-dir --with-config-file-path=/etc --with-pdo-mysql=/usr/local/mysql --with-freetype-dir=/usr/include/freetype2/freetype/ --with-mcrypt --enable-opcache
 
 make 
 
@@ -123,4 +123,25 @@ tail -f /usr/local/php/var/log/php-fpm.log
 ### 重启php-fpm
 ```
 kill -USR2 `cat /usr/local/php/var/run/php-fpm.pid`
+```
+
+
+## 动态编译并配置openssl
+
+```
+cd {php-src}/ext/openssl
+
+mv config0.m4 config.m4
+
+/usr/local/php/bin/phpize
+
+./configure --with-openssl --with-php-config=/usr/local/php/bin/php-config
+make
+make install
+```
+
+在/etc/php.ini中添加一行
+
+```
+extension=openssl.so
 ```
