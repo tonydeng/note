@@ -1,0 +1,22 @@
+var count_recharge_by_day = function(query){
+    return db.recharge.group(
+    {
+        keyf:function(doc){
+                var date = new Date(doc.createTime.valueOf() - (8 * 60 * 60 * 1000));
+                var dateKey = (date.getFullYear()  + "-" + (date.getMonth()+1)  + "-"  + date.getDate());
+                return {"date":dateKey,"uid":doc.uid};
+            },
+        cond:query,
+        initial:{count:0},
+        reduce:function(object,prev){
+                 prev.count += obj.productUnitNum;
+            }
+    });
+
+}
+count_recharge_by_day({
+        "productUnitNum":{$gt:0},
+        "type":1,
+        "tradeStatus":6,
+        "createTime":{$gte:ISODate("2015-03-01T00:00:00.000Z"),$lt:ISODate("2015-03-10T23:59:59.999Z")}
+    });
