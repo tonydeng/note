@@ -1,0 +1,5 @@
+sudo mkdir /home/release/.ssh
+sudo cp /home/taod/shells/authorized_keys /home/release/.ssh
+sudo chmod 700 /home/release/.ssh
+sudo chmod 600 /home/release/.ssh/authorized_keys
+sudo chown -R release:admgroup /home/release

@@ -1,0 +1,46 @@
+// 每日每人每书支付汇总
+var count_pay_by_day = function(query){
+    return db.payDetail.group(
+    {
+        keyf:function(doc){
+                var date = new Date(doc.createTime.valueOf() - (8 * 60 * 60 * 1000));
+                var dateKey = (date.getFullYear() + "-" + (date.getMonth()+1)  + "-"  + date.getDate());
+                return {"date":dateKey,"uid":doc.uid,"bookid":doc.bookId.valueOf()};
+            },
+        cond:query,
+        initial:{count:0},
+        reduce:function(object,prev){
+                 prev.count += obj.cost;
+            }
+    });
+
+}
+count_pay_by_day({
+        "createTime":{$gte:ISODate("2015-03-01T00:00:00.000Z"),$lt:ISODate("2015-03-10T23:59:59.999Z")}
+    });
+
+-------------------------
+//每日每书的UV及充值汇总
+var count_pay_by_day = function(query){
+    return db.payDetail.group(
+    {
+        keyf:function(doc){
+                var date = new Date(doc.createTime.valueOf() - (8 * 60 * 60 * 1000));
+                var dateKey = (date.getFullYear() + "-" + (date.getMonth()+1)  + "-"  + date.getDate());
+                return {"date":dateKey,"bookid":doc.bookId.valueOf()};
+            },
+        cond:query,
+        initial:{count:0,uids:[],uv:0},
+        reduce:function(obj,prev){
+                 prev.count += obj.cost;
+                 if(prev.uids.indexOf(obj.uid) == -1){
+                    prev.uids.push(obj.uid);
+                    prev.uv++;
+                 }
+            }
+    });
+
+}
+count_pay_by_day({
+        "createTime":{$gte:ISODate("2015-03-01T00:00:00.000Z"),$lt:ISODate("2015-03-02T23:59:59.999Z")}
+    });
