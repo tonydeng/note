@@ -54,10 +54,6 @@ git log git-toolkit-1.0 --pretty=format:%s
 ```
 
 ```
-git log git-toolkit-1.0 --pretty=format:%s
-```
-
-```
 git log git-toolkit-1.0...git-toolkit-1.0.1  --pretty=format:%s
 ```
 
@@ -72,11 +68,6 @@ git log git-toolkit-1.0 --pretty=format:'<li> <a href="http://github.com/tonyden
 
 ![changelog](/img/git-toolkit/changelog.png)
 
-[slide data-transition="horizontal3d"]
-
-# Git Toolkit介绍
-
-https://tonydeng.github.io/git-toolkit/
 
 [slide data-transition="horizontal"]
 
@@ -164,9 +155,12 @@ total 224
 1. Message Template
 1. Git命令命名规则
 1. 掌握一门脚本语言（shell）
-[slide data-transition="kontext"]
+
+[slide data-transition="horizontal3d"]
 
 # Git Toolkit介绍
+
+https://tonydeng.github.io/git-toolkit/
 
 [slide data-transition="vkontext"]
 
@@ -175,15 +169,14 @@ total 224
 #### 1. 使用curl
 
 ```bash
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/tonydeng/git-toolkit/master/installer.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/tonydeng/git-toolkit/master/installer.sh)"
 ```
 
 #### 2. 使用wget
 
 ```bash
-sh -c "$(wget https://raw.githubusercontent.com/tonydeng/git-toolkit/master/installer.sh -O -)"
+bash -c "$(wget https://raw.githubusercontent.com/tonydeng/git-toolkit/master/installer.sh -O -)"
 ```
-
 
 [slide data-transition="circle"]
 ## 自定义命令 -- git toolkit
@@ -307,6 +300,9 @@ git config --global core.hooksPath
 [slide data-transition="move"]
 
 # Shell开发神器 shellcheck
+
+Google Shell Style Guide [英文版](https://google.github.io/styleguide/shell.xml)
+[中文版](http://zh-google-styleguide.readthedocs.io/en/latest/google-shell-styleguide/contents/)
 
 [slide data-transition="newspaper"]
 
