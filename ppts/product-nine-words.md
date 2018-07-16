@@ -18,7 +18,9 @@ https://twitter.com/wolfdeng
 
 [slide data-transition="cards"]
 
-<embed height="415" width="544" quality="high" allowfullscreen="true" type="application/x-shockwave-flash" src="http://static.hdslb.com/miniloader.swf" flashvars="aid=1032809&page=1" pluginspage="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash"></embed>
+<iframe src="//player.bilibili.com/player.html?aid=1032809&cid=1495278&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+
+视频地址： https://www.bilibili.com/video/av1032809/
 
 [slide data-transition="earthquake"]
 
